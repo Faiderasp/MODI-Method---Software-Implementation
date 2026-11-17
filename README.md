@@ -1,72 +1,72 @@
 # MODI Method - Software Implementation
 
-Implementación en Python para la resolución y optimización de problemas de transporte en Programación Lineal utilizando el **Método MODI (Modified Distribution Method)** o **Método U-V**.
+A Python-based implementation for solving and optimizing transportation problems in Linear Programming using the **MODI (Modified Distribution) Method**, also known as the **U-V Method**.
 
 ---
 
-## 📌 Acerca del Proyecto
+## 📌 About the Project
 
-Este proyecto forma parte de la asignatura de **Investigación de Operaciones** y tiene como objetivo resolver problemas de optimización de transporte, encontrando la distribución óptima que minimice el costo total de envío satisfaciendo las restricciones de oferta y demanda.
+This project was developed as part of an **Operations Research** course. Its main goal is to solve transportation optimization problems by determining the optimal distribution plan that minimizes the total shipping cost while satisfying supply and demand constraints.
 
-El software está diseñado con una arquitectura modular basada en capas (controlador, modelo, servicio e interfaz auxiliar de logging).
-
----
-
-## 🧠 ¿Qué es el Método MODI?
-
-El **Método MODI** (también conocido como Método de Distribución Modificada o Método U-V) permite verificar si una solución factible inicial de un problema de transporte es óptima:
-
-1. **Cálculo de Potenciales:** Asigna valores $u_i$ (para filas/orígenes) y $v_j$ (para columnas/destinos) tales que $u_i + v_j = c_{ij}$ para las celdas básicas (ocupadas).
-2. **Evaluación de Costos Marginales:** Calcula el costo de oportunidad $\Delta_{ij} = c_{ij} - (u_i + v_j)$ para las celdas no básicas.
-3. **Prueba de Optimalidad:** Si todos los $\Delta_{ij} \ge 0$, la solución actual es óptima. Si existe algún valor negativo, se introduce la celda más negativa al circuito de reasignación ($\theta$) hasta alcanzar el costo mínimo.
+The project follows a layered modular architecture consisting of a controller, data models, service layer, and interface helper utilities.
 
 ---
 
-## 📁 Estructura del Proyecto
+## 🧠 What is the MODI Method?
+
+The **MODI Method** (Modified Distribution / U-V Method) is an optimization technique used to evaluate whether an initial feasible solution to a transportation problem is optimal:
+
+1. **Calculate Potentials:** Assign values $u_i$ (row/origin potentials) and $v_j$ (column/destination potentials) such that $u_i + v_j = c_{ij}$ for all occupied (basic) cells.
+2. **Evaluate Opportunity Costs:** Compute the marginal opportunity cost $\Delta_{ij} = c_{ij} - (u_i + v_j)$ for all unoccupied (non-basic) cells.
+3. **Optimality Check:** If all $\Delta_{ij} \ge 0$, the current solution is optimal. If any negative values exist, an entering cell is selected to construct a closed reallocation loop ($\theta$) to reduce the total cost until the minimum is achieved.
+
+---
+
+## 📁 Project Structure
 
 ```text
 MODI Method - Software Implementation/
 │
 ├── controller/
 │   ├── __init__.py
-│   └── controller.py       # Controlador principal: orquesta la resolución y calcula costos totales
+│   └── controller.py       # Main controller: orchestrates solving and calculates total costs
 │
 ├── models/
-│   └── Model.py            # Modelos de datos (DataProblem, TotalCost) con dataclasses
+│   └── Model.py            # Data classes (DataProblem, TotalCost) for structured problem definition
 │
 ├── service/
 │   ├── __init__.py
-│   └── service.py          # Lógica del servicio MODI utilizando OTTools
+│   └── service.py          # Service logic implementing MODI resolution via OTTools
 │
 ├── interface/
-│   └── helpers.py          # Helpers auxiliares para logging formateado y salidas
+│   └── helpers.py          # Logging helpers and console output formatters
 │
-├── tests/                  # Directorio para pruebas unitarias
-├── app.py                  # Script principal de entrada y ejecución
-├── requirements.txt        # Dependencias del proyecto
-└── README.md               # Documentación
+├── tests/                  # Directory for unit tests
+├── app.py                  # Application entry point and demo problem execution
+├── requirements.txt        # Project dependencies
+└── README.md               # Documentation
 ```
 
 ---
 
-## 🛠️ Tecnologías y Librerías
+## 🛠️ Technologies & Libraries
 
-- **[Python](https://www.python.org/)** (v3.10+) – Lenguaje base del proyecto.
-- **[NumPy](https://numpy.org/)** – Manejo de matrices y operaciones numéricas vectorizadas.
-- **[OTTools](https://pypi.org/project/OTTools/)** – Herramienta especializada para problemas de transporte e investigación de operaciones.
+- **[Python](https://www.python.org/)** (v3.10+) – Core programming language.
+- **[NumPy](https://numpy.org/)** – Matrix operations and array handling.
+- **[OTTools](https://pypi.org/project/OTTools/)** – Transportation Problem optimization solver.
 
 ---
 
-## 🚀 Instalación y Ejecución
+## 🚀 Installation & Setup
 
-### 1. Clonar el repositorio
+### 1. Clone the repository
 
 ```bash
 git clone https://github.com/Faiderasp/MODI-Method---Software-Implementation.git
 cd "MODI Method - Software Implementation"
 ```
 
-### 2. Crear y activar un entorno virtual
+### 2. Create and activate a virtual environment
 
 **Windows (PowerShell):**
 ```powershell
@@ -80,13 +80,13 @@ python3 -m venv venv
 source venv/bin/activate
 ```
 
-### 3. Instalar dependencias
+### 3. Install dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 4. Ejecutar el proyecto
+### 4. Run the application
 
 ```bash
 python app.py
@@ -94,42 +94,42 @@ python app.py
 
 ---
 
-## 💻 Ejemplo de Uso
+## 💻 Usage Example
 
-En `app.py` se define un problema de transporte con la matriz de costos, oferta y demanda:
+`app.py` defines a sample transportation problem with cost matrix, supply, and demand:
 
 ```python
 from controller.controller import c_MODI
 from interface.helpers import printer
 
-# Matriz de costos unitarios de transporte
+# Unit shipping costs matrix
 costs = [
     [4, 8, 8],
     [2, 5, 7],
     [6, 4, 3]
 ]
 
-# Oferta de cada origen
+# Supply capacities (Origins)
 offer = [20, 30, 25]
 
-# Demanda de cada destino
+# Demand requirements (Destinations)
 demand = [10, 35, 30]
 
-# Solución básica asignada inicial (opcional para cálculo de costo actual)
+# Initial basic feasible assignments (used for initial cost calculation)
 assignment = [
     [10, 5, 5],
     [0, 30, 0],
     [0, 0, 25]
 ]
 
-# Ejecutar el controlador MODI
+# Run MODI solver controller
 result = c_MODI(p_costs=costs, p_demand=demand, p_offer=offer, p_assignments=assignment)
 
-# Imprimir resultado
+# Print results
 printer(result)
 ```
 
-### Salida esperada:
+### Output:
 
 ```json
 {
@@ -144,14 +144,14 @@ printer(result)
 
 ---
 
-## 👥 Autores
+## 👥 Authors
 
-Desarrollado para el curso de **Investigación de Operaciones**:
+Developed for the **Operations Research** course:
 
 - [Faiderasp](https://github.com/Faiderasp)
 
 ---
 
-## 📄 Licencia
+## 📄 License
 
-Este proyecto está bajo la Licencia MIT. Consulta el archivo [LICENSE](LICENSE) para más detalles.
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
