@@ -1,158 +1,157 @@
-# MODI Solver – Transportation Optimization
+# MODI Method - Software Implementation
 
-A Python-based software project that implements the **MODI (Modified Distribution) Method**, also known as the **U-V Method**, to solve transportation problems in Linear Programming.
+Implementación en Python para la resolución y optimización de problemas de transporte en Programación Lineal utilizando el **Método MODI (Modified Distribution Method)** o **Método U-V**.
 
-## About the Project
+---
 
-MODI Solver is an academic project developed as part of an Operations Research course. Its main purpose is to implement the MODI algorithm to find an optimal transportation plan while minimizing total transportation costs.
+## 📌 Acerca del Proyecto
 
-The software aims to automate the mathematical procedures involved in the method, making it easier to understand, calculate, and analyze transportation optimization problems.
+Este proyecto forma parte de la asignatura de **Investigación de Operaciones** y tiene como objetivo resolver problemas de optimización de transporte, encontrando la distribución óptima que minimice el costo total de envío satisfaciendo las restricciones de oferta y demanda.
 
-## What is the MODI Method?
+El software está diseñado con una arquitectura modular basada en capas (controlador, modelo, servicio e interfaz auxiliar de logging).
 
-The MODI Method is an optimization technique used to determine whether an initial feasible solution to a transportation problem is optimal.
+---
 
-It works by calculating row and column potentials (U and V), evaluating opportunity costs, and improving the current allocation whenever a better solution is possible.
+## 🧠 ¿Qué es el Método MODI?
 
-The process continues until the optimality condition is satisfied.
+El **Método MODI** (también conocido como Método de Distribución Modificada o Método U-V) permite verificar si una solución factible inicial de un problema de transporte es óptima:
 
-## Main Features
+1. **Cálculo de Potenciales:** Asigna valores $u_i$ (para filas/orígenes) y $v_j$ (para columnas/destinos) tales que $u_i + v_j = c_{ij}$ para las celdas básicas (ocupadas).
+2. **Evaluación de Costos Marginales:** Calcula el costo de oportunidad $\Delta_{ij} = c_{ij} - (u_i + v_j)$ para las celdas no básicas.
+3. **Prueba de Optimalidad:** Si todos los $\Delta_{ij} \ge 0$, la solución actual es óptima. Si existe algún valor negativo, se introduce la celda más negativa al circuito de reasignación ($\theta$) hasta alcanzar el costo mínimo.
 
-- Transportation problem configuration.
-- Cost matrix input.
-- Supply and demand management.
-- Initial feasible solution generation.
-- Calculation of U and V potentials.
-- Opportunity cost calculation.
-- Entering cell identification.
-- Closed-loop construction.
-- Theta calculation and allocation adjustment.
-- Iterative optimization process.
-- Optimal transportation cost calculation.
+---
 
-*Features will be updated as development progresses.*
-
-## Technologies
-
-- **Python** – Core programming language.
-- **NumPy** – Numerical and matrix operations.
-- **Tkinter / CustomTkinter** – Graphical user interface (depending on implementation).
-- **Matplotlib** – Data visualization (if implemented).
-
-## Project Structure
+## 📁 Estructura del Proyecto
 
 ```text
-MODI-Solver/
+MODI Method - Software Implementation/
 │
-├── main.py
-│
-├── algorithms/
-│   ├── northwest.py
-│   ├── potentials.py
-│   ├── opportunity_cost.py
-│   ├── cycles.py
-│   └── modi.py
+├── controller/
+│   ├── __init__.py
+│   └── controller.py       # Controlador principal: orquesta la resolución y calcula costos totales
 │
 ├── models/
-│   └── transportation.py
+│   └── Model.py            # Modelos de datos (DataProblem, TotalCost) con dataclasses
+│
+├── service/
+│   ├── __init__.py
+│   └── service.py          # Lógica del servicio MODI utilizando OTTools
 │
 ├── interface/
-│   ├── window.py
-│   ├── input_form.py
-│   └── results.py
+│   └── helpers.py          # Helpers auxiliares para logging formateado y salidas
 │
-├── tests/
-│   └── test_modi.py
-│
-├── requirements.txt
-└── README.md
+├── tests/                  # Directorio para pruebas unitarias
+├── app.py                  # Script principal de entrada y ejecución
+├── requirements.txt        # Dependencias del proyecto
+└── README.md               # Documentación
 ```
 
-## Installation
+---
 
-### 1. Clone the repository
+## 🛠️ Tecnologías y Librerías
+
+- **[Python](https://www.python.org/)** (v3.10+) – Lenguaje base del proyecto.
+- **[NumPy](https://numpy.org/)** – Manejo de matrices y operaciones numéricas vectorizadas.
+- **[OTTools](https://pypi.org/project/OTTools/)** – Herramienta especializada para problemas de transporte e investigación de operaciones.
+
+---
+
+## 🚀 Instalación y Ejecución
+
+### 1. Clonar el repositorio
 
 ```bash
 git clone https://github.com/Faiderasp/MODI-Method---Software-Implementation.git
+cd "MODI Method - Software Implementation"
 ```
 
-### 2. Navigate to the project directory
+### 2. Crear y activar un entorno virtual
 
-```bash
-cd MODI-Solver
-```
-
-### 3. Create a virtual environment
-
-```bash
-python -m venv venv
-```
-
-### 4. Activate the virtual environment
-
-**Windows:**
-
+**Windows (PowerShell):**
 ```powershell
-venv\Scripts\activate
+python -m venv venv
+.\venv\Scripts\Activate.ps1
 ```
 
 **Linux / macOS:**
-
 ```bash
+python3 -m venv venv
 source venv/bin/activate
 ```
 
-### 5. Install dependencies
+### 3. Instalar dependencias
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 6. Run the application
+### 4. Ejecutar el proyecto
 
 ```bash
-python main.py
+python app.py
 ```
 
-## How It Works
+---
 
-The MODI algorithm follows these steps:
+## 💻 Ejemplo de Uso
 
-1. Define the transportation problem using costs, supply, and demand.
-2. Generate an initial feasible solution.
-3. Calculate the U and V potentials for occupied cells.
-4. Calculate opportunity costs for unoccupied cells.
-5. Check the optimality condition.
-6. Identify the entering cell if an improvement is possible.
-7. Construct a closed loop and determine the adjustment value (Theta).
-8. Update the allocations.
-9. Repeat the process until an optimal solution is found.
+En `app.py` se define un problema de transporte con la matriz de costos, oferta y demanda:
 
-## Example
+```python
+from controller.controller import c_MODI
+from interface.helpers import printer
 
-Consider the following transportation cost matrix:
+# Matriz de costos unitarios de transporte
+costs = [
+    [4, 8, 8],
+    [2, 5, 7],
+    [6, 4, 3]
+]
 
-| | Destination 1 | Destination 2 | Destination 3 | Supply |
-|---|---:|---:|---:|---:|
-| Origin 1 | 4 | 8 | 8 | 20 |
-| Origin 2 | 2 | 5 | 7 | 30 |
-| Origin 3 | 6 | 4 | 3 | 25 |
-| **Demand** | **10** | **35** | **30** | **75** |
+# Oferta de cada origen
+offer = [20, 30, 25]
 
-The objective is to determine the optimal allocation that satisfies all supply and demand constraints while minimizing the total transportation cost.
+# Demanda de cada destino
+demand = [10, 35, 30]
 
-## Academic Context
+# Solución básica asignada inicial (opcional para cálculo de costo actual)
+assignment = [
+    [10, 5, 5],
+    [0, 30, 0],
+    [0, 0, 25]
+]
 
-This project is being developed in pairs as a final project for an Operations Research course.
+# Ejecutar el controlador MODI
+result = c_MODI(p_costs=costs, p_demand=demand, p_offer=offer, p_assignments=assignment)
 
-The implementation focuses on understanding and applying the mathematical principles behind the MODI algorithm through original programming and problem-solving.
+# Imprimir resultado
+printer(result)
+```
 
-## Authors
+### Salida esperada:
 
-Developed by:
+```json
+{
+  "Total Cost": 345,
+  "Solution": [
+    [10.0,  0.0,  0.0],
+    [10.0, 25.0,  0.0],
+    [ 0.0,  5.0, 25.0]
+  ]
+}
+```
 
-- [Developer Name](https://github.com/Faiderasp)
+---
 
-## License
+## 👥 Autores
 
-This project was developed for academic and educational purposes.
+Desarrollado para el curso de **Investigación de Operaciones**:
+
+- [Faiderasp](https://github.com/Faiderasp)
+
+---
+
+## 📄 Licencia
+
+Este proyecto está bajo la Licencia MIT. Consulta el archivo [LICENSE](LICENSE) para más detalles.
