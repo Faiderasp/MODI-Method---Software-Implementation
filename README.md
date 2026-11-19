@@ -121,17 +121,6 @@ A manufacturing company produces goods across **3 production plants** ($P_1, P_2
 | **Plant 3 ($P_3$)** | $\$6$ | $\$4$ | $\$3$ | **25** |
 | **Demand ($D_j$)** | **10** | **35** | **30** | **75** |
 
-### Mathematical Model
-
-$$\text{Minimize } Z = \sum_{i=1}^{3} \sum_{j=1}^{3} c_{ij} \cdot x_{ij}$$
-
-Subject to:
-$$\begin{aligned}
-\sum_{j=1}^{3} x_{1j} &= 20, \quad \sum_{j=1}^{3} x_{2j} = 30, \quad \sum_{j=1}^{3} x_{3j} = 25 && \text{(Supply Constraints)} \\
-\sum_{i=1}^{3} x_{i1} &= 10, \quad \sum_{i=1}^{3} x_{i2} = 35, \quad \sum_{i=1}^{3} x_{i3} = 30 && \text{(Demand Constraints)} \\
-x_{ij} &\ge 0 \quad \forall i, j && \text{(Non-negativity)}
-\end{aligned}$$
-
 ---
 
 ## 💻 Python Execution
