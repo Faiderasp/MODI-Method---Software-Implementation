@@ -22,9 +22,12 @@ def c_MODI(
             demand=array_demand
         )
 
+        solution = s_MODI(Problem)
+        
         result = {
-            "Total Cost": total_cost(cost=p_costs, assignments=p_assignments),
-            "Solution": s_MODI(Problem)
+            "Initial Cost": total_cost(cost=p_costs, assignments=p_assignments), # si se quiere conservar
+            "Optimal Cost": total_cost(cost=p_costs, assignments=solution),
+            "Solution": solution
         }
         
         return result

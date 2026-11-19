@@ -19,4 +19,4 @@ assignment = [
 
 result = c_MODI(p_costs=costs, p_demand=demand, p_offer=offer, p_assignments=assignment)
 
-printer(result)
+printer(f"Result: {result}")

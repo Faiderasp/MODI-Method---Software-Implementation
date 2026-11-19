@@ -1,5 +1,6 @@
 import logging
 
+from pprint import pprint as pp
 logging.basicConfig(
     level=logging.INFO,
     format='[%(levelname)s] %(message)s'
@@ -18,4 +19,4 @@ def h_warning(data: str):
     logging.warning(data)
 
 def printer(data):
-    print(data)
+    pp(data)

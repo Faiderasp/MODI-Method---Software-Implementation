@@ -4,11 +4,11 @@ from typing import List
 
 
 def s_MODI(Data: DataProblem):
-
+    
     Problem = TransportationProblem(
-        Data.costs,
-        Data.demand,
-        Data.offer
+        cost_matrix=Data.costs,
+        supply=Data.offer,
+        demand=Data.demand
     )
     result = Problem.solve("MODI")
 

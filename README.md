@@ -94,9 +94,49 @@ python app.py
 
 ---
 
-## 💻 Usage Example
+## 📖 Sample Problem Formulation
 
-`app.py` defines a sample transportation problem with cost matrix, supply, and demand:
+A manufacturing company produces goods across **3 production plants** ($P_1, P_2, P_3$) and needs to distribute them to **3 fulfillment centers** ($D_1, D_2, D_3$).
+
+### Problem Parameters
+
+- **Production Capacities (Supply):**
+  - Plant 1 ($P_1$): 20 units
+  - Plant 2 ($P_2$): 30 units
+  - Plant 3 ($P_3$): 25 units
+  - Total Supply: $20 + 30 + 25 = \mathbf{75\text{ units}}$
+
+- **Customer Requirements (Demand):**
+  - Center 1 ($D_1$): 10 units
+  - Center 2 ($D_2$): 35 units
+  - Center 3 ($D_3$): 30 units
+  - Total Demand: $10 + 35 + 30 = \mathbf{75\text{ units}}$ *(Balanced problem)*
+
+- **Unit Transportation Cost Matrix ($c_{ij}$ in USD):**
+
+| Origin / Destination | Center 1 ($D_1$) | Center 2 ($D_2$) | Center 3 ($D_3$) | Supply ($O_i$) |
+| :--- | :---: | :---: | :---: | :---: |
+| **Plant 1 ($P_1$)** | $\$4$ | $\$8$ | $\$8$ | **20** |
+| **Plant 2 ($P_2$)** | $\$2$ | $\$5$ | $\$7$ | **30** |
+| **Plant 3 ($P_3$)** | $\$6$ | $\$4$ | $\$3$ | **25** |
+| **Demand ($D_j$)** | **10** | **35** | **30** | **75** |
+
+### Mathematical Model
+
+$$\text{Minimize } Z = \sum_{i=1}^{3} \sum_{j=1}^{3} c_{ij} \cdot x_{ij}$$
+
+Subject to:
+$$\begin{aligned}
+\sum_{j=1}^{3} x_{1j} &= 20, \quad \sum_{j=1}^{3} x_{2j} = 30, \quad \sum_{j=1}^{3} x_{3j} = 25 && \text{(Supply Constraints)} \\
+\sum_{i=1}^{3} x_{i1} &= 10, \quad \sum_{i=1}^{3} x_{i2} = 35, \quad \sum_{i=1}^{3} x_{i3} = 30 && \text{(Demand Constraints)} \\
+x_{ij} &\ge 0 \quad \forall i, j && \text{(Non-negativity)}
+\end{aligned}$$
+
+---
+
+## 💻 Python Execution
+
+This problem is modeled in `app.py`:
 
 ```python
 from controller.controller import c_MODI
@@ -115,7 +155,7 @@ offer = [20, 30, 25]
 # Demand requirements (Destinations)
 demand = [10, 35, 30]
 
-# Initial basic feasible assignments (used for initial cost calculation)
+# Initial basic allocation (optional baseline)
 assignment = [
     [10, 5, 5],
     [0, 30, 0],
@@ -127,19 +167,6 @@ result = c_MODI(p_costs=costs, p_demand=demand, p_offer=offer, p_assignments=ass
 
 # Print results
 printer(result)
-```
-
-### Output:
-
-```json
-{
-  "Total Cost": 345,
-  "Solution": [
-    [10.0,  0.0,  0.0],
-    [10.0, 25.0,  0.0],
-    [ 0.0,  5.0, 25.0]
-  ]
-}
 ```
 
 ---
